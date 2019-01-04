@@ -21,6 +21,7 @@ import com.alibaba.dubbo.common.extension.SPI;
 /**
  * StatusChecker
  */
+// 状态检查接口
 @SPI
 public interface StatusChecker {
 
@@ -29,6 +30,7 @@ public interface StatusChecker {
      *
      * @return status
      */
+    // 检查状态
     Status check();
 
 }

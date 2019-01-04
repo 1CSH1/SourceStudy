@@ -19,10 +19,14 @@ package com.alibaba.dubbo.common.status;
 /**
  * Status
  */
+// 状态类
 public class Status {
 
+    // 状态级别
     private final Level level;
+    // 状态信息
     private final String message;
+    // 状态描述
     private final String description;
 
     public Status(Level level) {

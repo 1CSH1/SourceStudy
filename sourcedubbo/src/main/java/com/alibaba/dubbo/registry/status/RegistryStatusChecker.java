@@ -28,9 +28,11 @@ import java.util.Collection;
  * RegistryStatusChecker
  *
  */
+// 检查状态检查
 @Activate
 public class RegistryStatusChecker implements StatusChecker {
 
+    // 不可用的就返回 disconnected，可用的就返回 connected
     @Override
     public Status check() {
         Collection<Registry> registries = AbstractRegistryFactory.getRegistries();

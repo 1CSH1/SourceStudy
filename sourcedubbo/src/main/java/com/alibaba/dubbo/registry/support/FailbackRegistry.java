@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
  * FailbackRegistry. (SPI, Prototype, ThreadSafe)
  *
  */
+// 快速失败注册中心
 public abstract class FailbackRegistry extends AbstractRegistry {
 
     // Scheduled executor service
