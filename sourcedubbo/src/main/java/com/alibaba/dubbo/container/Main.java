@@ -65,10 +65,12 @@ public class Main {
             }
             logger.info("Use container type(" + Arrays.toString(args) + ") to run dubbo serivce.");
 
+            // 优雅暂停
             if ("true".equals(System.getProperty(SHUTDOWN_HOOK_KEY))) {
                 Runtime.getRuntime().addShutdownHook(new Thread("dubbo-container-shutdown-hook") {
                     @Override
                     public void run() {
+                        // 遍历所有 container，依次暂停
                         for (Container container : containers) {
                             try {
                                 container.stop();
@@ -87,6 +89,7 @@ public class Main {
                 });
             }
 
+            // 启动所有 container
             for (Container container : containers) {
                 container.start();
                 logger.info("Dubbo " + container.getClass().getSimpleName() + " started!");

@@ -25,6 +25,7 @@ import java.util.List;
  *
  * @see com.alibaba.dubbo.registry.RegistryService#subscribe(URL, NotifyListener)
  */
+//通知监听器
 public interface NotifyListener {
 
     /**
@@ -39,6 +40,7 @@ public interface NotifyListener {
      *
      * @param urls The list of registered information , is always not empty. The meaning is the same as the return value of {@link com.alibaba.dubbo.registry.RegistryService#lookup(URL)}.
      */
+    // 发送通知
     void notify(List<URL> urls);
 
 }

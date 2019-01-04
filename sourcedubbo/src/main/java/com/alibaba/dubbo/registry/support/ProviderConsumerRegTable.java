@@ -29,10 +29,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @date 2017/11/23
  */
+// 工具类
 public class ProviderConsumerRegTable {
+    // 存储提供方调用对象
     public static ConcurrentHashMap<String, Set<ProviderInvokerWrapper>> providerInvokers = new ConcurrentHashMap<String, Set<ProviderInvokerWrapper>>();
+    // 存储消费方调用对象
     public static ConcurrentHashMap<String, Set<ConsumerInvokerWrapper>> consumerInvokers = new ConcurrentHashMap<String, Set<ConsumerInvokerWrapper>>();
 
+    // 注册提供方调用对象，缓存到 providerInvokers 中
     public static void registerProvider(Invoker invoker, URL registryUrl, URL providerUrl) {
         ProviderInvokerWrapper wrapperInvoker = new ProviderInvokerWrapper(invoker, registryUrl, providerUrl);
         String serviceUniqueName = providerUrl.getServiceKey();
@@ -44,6 +48,7 @@ public class ProviderConsumerRegTable {
         invokers.add(wrapperInvoker);
     }
 
+    // 获取提供方调用对象集合
     public static Set<ProviderInvokerWrapper> getProviderInvoker(String serviceUniqueName) {
         Set<ProviderInvokerWrapper> invokers = providerInvokers.get(serviceUniqueName);
         if (invokers == null) {
@@ -52,6 +57,7 @@ public class ProviderConsumerRegTable {
         return invokers;
     }
 
+    // 获取提供方调用对象
     public static ProviderInvokerWrapper getProviderWrapper(Invoker invoker) {
         URL providerUrl = invoker.getUrl();
         if (Constants.REGISTRY_PROTOCOL.equals(providerUrl.getProtocol())) {
@@ -73,6 +79,7 @@ public class ProviderConsumerRegTable {
         return null;
     }
 
+    // 注册消费方调用对象
     public static void registerConsumer(Invoker invoker, URL registryUrl, URL consumerUrl, RegistryDirectory registryDirectory) {
         ConsumerInvokerWrapper wrapperInvoker = new ConsumerInvokerWrapper(invoker, registryUrl, consumerUrl, registryDirectory);
         String serviceUniqueName = consumerUrl.getServiceKey();
@@ -84,6 +91,7 @@ public class ProviderConsumerRegTable {
         invokers.add(wrapperInvoker);
     }
 
+    // 获取消费方调用对象列表
     public static Set<ConsumerInvokerWrapper> getConsumerInvoker(String serviceUniqueName) {
         Set<ConsumerInvokerWrapper> invokers = consumerInvokers.get(serviceUniqueName);
         if (invokers == null) {

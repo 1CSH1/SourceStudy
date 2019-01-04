@@ -40,9 +40,11 @@ import java.util.concurrent.ConcurrentMap;
  * ZookeeperRegistry
  *
  */
+// Zookeeper 注册中心
 public class ZookeeperRegistry extends FailbackRegistry {
 
     private final static Logger logger = LoggerFactory.getLogger(ZookeeperRegistry.class);
+
 
     private final static int DEFAULT_ZOOKEEPER_PORT = 2181;
 

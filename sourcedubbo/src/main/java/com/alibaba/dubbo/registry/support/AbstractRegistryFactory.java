@@ -35,6 +35,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @see com.alibaba.dubbo.registry.RegistryFactory
  */
+// 注册中心抽象工厂类
 public abstract class AbstractRegistryFactory implements RegistryFactory {
 
     // Log output
@@ -44,6 +45,7 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
     private static final ReentrantLock LOCK = new ReentrantLock();
 
     // Registry Collection Map<RegistryAddress, Registry>
+    // 存储注册应用容器
     private static final Map<String, Registry> REGISTRIES = new ConcurrentHashMap<String, Registry>();
 
     /**
@@ -51,6 +53,7 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
      *
      * @return all registries
      */
+    // 获取所有的注册应用
     public static Collection<Registry> getRegistries() {
         return Collections.unmodifiableCollection(REGISTRIES.values());
     }
@@ -59,15 +62,19 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
      * Close all created registries
      */
     // TODO: 2017/8/30 to move somewhere else better
+    // 关闭所有注册应用
     public static void destroyAll() {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Close all registries " + getRegistries());
         }
+        // 锁住，只能有一个线程跑
         // Lock up the registry shutdown process
         LOCK.lock();
         try {
+            // 遍历所有注册应用
             for (Registry registry : getRegistries()) {
                 try {
+                    // 执行销毁方法
                     registry.destroy();
                 } catch (Throwable e) {
                     LOGGER.error(e.getMessage(), e);
@@ -80,19 +87,23 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
         }
     }
 
+    // 向注册中心注册应用
     @Override
     public Registry getRegistry(URL url) {
+        // 添加 interface 参数，移除掉 export、refer 参数
         url = url.setPath(RegistryService.class.getName())
                 .addParameter(Constants.INTERFACE_KEY, RegistryService.class.getName())
                 .removeParameters(Constants.EXPORT_KEY, Constants.REFER_KEY);
         String key = url.toServiceString();
         // Lock the registry access process to ensure a single instance of the registry
+        // 锁住，只允许一个时间一个线程跑
         LOCK.lock();
         try {
             Registry registry = REGISTRIES.get(key);
             if (registry != null) {
                 return registry;
             }
+            // 注册中心没有则创建
             registry = createRegistry(url);
             if (registry == null) {
                 throw new IllegalStateException("Can not create registry " + url);
@@ -105,6 +116,7 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
         }
     }
 
+    // 设计模式：模板方法
     protected abstract Registry createRegistry(URL url);
 
 }

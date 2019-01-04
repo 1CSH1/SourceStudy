@@ -27,6 +27,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * SpringContainer. (SPI, Singleton, ThreadSafe)
  */
+// 默认 Spring Container 实现类
 public class SpringContainer implements Container {
 
     public static final String SPRING_CONFIG = "dubbo.spring.config";
@@ -40,6 +41,7 @@ public class SpringContainer implements Container {
 
     @Override
     public void start() {
+        // 读取 Spring 配置，初始化 Spring 上下文
         String configPath = ConfigUtils.getProperty(SPRING_CONFIG);
         if (configPath == null || configPath.length() == 0) {
             configPath = DEFAULT_SPRING_CONFIG;

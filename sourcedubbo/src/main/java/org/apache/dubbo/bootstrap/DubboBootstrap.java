@@ -68,6 +68,7 @@ public class DubboBootstrap {
     }
 
     public void start() {
+        // 注册优雅暂停
         if (registerShutdownHookOnStart) {
             registerShutdownHook();
         } else {
@@ -75,6 +76,7 @@ public class DubboBootstrap {
             // we need to remove it explicitly
             removeShutdownHook();
         }
+
         for (ServiceConfig serviceConfig: serviceConfigList) {
             serviceConfig.export();
         }

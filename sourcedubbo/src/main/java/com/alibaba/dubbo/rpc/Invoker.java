@@ -25,6 +25,7 @@ import com.alibaba.dubbo.common.Node;
  * @see com.alibaba.dubbo.rpc.InvokerListener
  * @see com.alibaba.dubbo.rpc.protocol.AbstractInvoker
  */
+// 调用接口类
 public interface Invoker<T> extends Node {
 
     /**
@@ -32,6 +33,7 @@ public interface Invoker<T> extends Node {
      *
      * @return service interface.
      */
+    // 获取服务的接口类
     Class<T> getInterface();
 
     /**
@@ -41,6 +43,7 @@ public interface Invoker<T> extends Node {
      * @return result
      * @throws RpcException
      */
+    // 调用服务
     Result invoke(Invocation invocation) throws RpcException;
 
 }

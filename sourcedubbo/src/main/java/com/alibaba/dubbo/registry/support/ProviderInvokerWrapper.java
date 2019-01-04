@@ -25,6 +25,7 @@ import com.alibaba.dubbo.rpc.RpcException;
 /**
  * @date 2017/11/23
  */
+// 提供方调用封装类
 public class ProviderInvokerWrapper<T> implements Invoker {
     private Invoker<T> invoker;
     private URL originUrl;
