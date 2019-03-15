@@ -41,6 +41,7 @@ public class CacheFilter implements Filter {
         this.cacheFactory = cacheFactory;
     }
 
+    // 调用加缓存
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         if (cacheFactory != null && ConfigUtils.isNotEmpty(invoker.getUrl().getMethodParameter(invocation.getMethodName(), Constants.CACHE_KEY))) {

@@ -24,6 +24,7 @@ import com.alibaba.dubbo.rpc.Invocation;
 /**
  * CacheFactory
  */
+// 默认 lru 算法的缓存策略
 @SPI("lru")
 public interface CacheFactory {
 
