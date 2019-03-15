@@ -45,9 +45,10 @@ public class ZookeeperRegistry extends FailbackRegistry {
 
     private final static Logger logger = LoggerFactory.getLogger(ZookeeperRegistry.class);
 
-
+    // 注册中心默认端口
     private final static int DEFAULT_ZOOKEEPER_PORT = 2181;
 
+    // 保存在 Zookeeper 的根目录
     private final static String DEFAULT_ROOT = "dubbo";
 
     private final String root;
@@ -63,15 +64,19 @@ public class ZookeeperRegistry extends FailbackRegistry {
         if (url.isAnyHost()) {
             throw new IllegalStateException("registry address == null");
         }
+        // 支持分组
         String group = url.getParameter(Constants.GROUP_KEY, DEFAULT_ROOT);
         if (!group.startsWith(Constants.PATH_SEPARATOR)) {
             group = Constants.PATH_SEPARATOR + group;
         }
         this.root = group;
+        // 连接 Zookeeper
         zkClient = zookeeperTransporter.connect(url);
+        // 添加状态监听器
         zkClient.addStateListener(new StateListener() {
             @Override
             public void stateChanged(int state) {
+                // 状态为 RECONNECTED 则恢复
                 if (state == RECONNECTED) {
                     try {
                         recover();
@@ -97,6 +102,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
 
     @Override
     public boolean isAvailable() {
+        // 判断连接是否是活的
         return zkClient.isConnected();
     }
 
@@ -104,6 +110,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
     public void destroy() {
         super.destroy();
         try {
+            // 关闭连接
             zkClient.close();
         } catch (Exception e) {
             logger.warn("Failed to close zookeeper client " + getUrl() + ", cause: " + e.getMessage(), e);
@@ -112,6 +119,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
 
     @Override
     protected void doRegister(URL url) {
+        // 向 Zookeeper 注册一个实例，也就是新建一个数据
         try {
             zkClient.create(toUrlPath(url), url.getParameter(Constants.DYNAMIC_KEY, true));
         } catch (Throwable e) {
@@ -121,6 +129,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
 
     @Override
     protected void doUnregister(URL url) {
+        // 向 Zookeeper 删除一个实例，也就是删除一个数据
         try {
             zkClient.delete(toUrlPath(url));
         } catch (Throwable e) {
@@ -132,6 +141,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
     protected void doSubscribe(final URL url, final NotifyListener listener) {
         try {
             if (Constants.ANY_VALUE.equals(url.getServiceInterface())) {
+                // 订阅服务的所有接口
                 String root = toRootPath();
                 ConcurrentMap<NotifyListener, ChildListener> listeners = zkListeners.get(url);
                 if (listeners == null) {
